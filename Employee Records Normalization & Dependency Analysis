@@ -1,80 +1,73 @@
-## 1. Identify Functional and Transitive Dependencies
+Identify Functional and Transitive Dependencies
 
-We can identify some dependencies by reviewing how the fields relate to each other and the primary key. The primary key in this example is **Employee ID**.
+We can identify some dependencies by reviewing how the fields relate to each other and the primary key. The Primary key in this example is the Employee ID. A functional dependency means that a certain attribute determines another. Based on the given data for this assignment, employee ID (Primary key) will determine the employee’s first name, last name, street address, city, zip code, position, and salary. They are all dependent on the Primary key (employee ID). These fields are important unique information that help identify attributes of each employee in the database. If we normalize the database, these fields will mostly remain in this table.
 
-### Functional Dependencies  
-A functional dependency means that one attribute uniquely determines another. Here, **Employee ID** determines:
-- First Name  
-- Last Name  
-- Street Address  
-- City  
-- State  
-- Zip Code  
-- Position  
-- Salary  
+Certain fields have a stronger relationship to each other than others and may need to be moved into separate tables. 
 
-These fields will remain together in the main table after normalization.
+Fields with Functional dependencies
 
-#### Fields with Functional Dependencies  
-- **Employee ID**, **First Name**, **Last Name**  
-- **Address**, **City**, **State**, **Zip Code**  
-- **Position**, **Salary**, **Department**, **Manager**
+Employee ID, Last name, and First name have strong relationships towards each other and should remain unchanged. Address, city, state, department, manager, position, and salary may change if an employee moves to a different house for example then the address field would change. Another example is if an employee gets a promotion/raise then the salary will change. Below I have listed some examples for fields to be put into their own tables for normalization.
 
-### Transitive Dependencies  
-A transitive dependency occurs when a non-key attribute depends on another non-key attribute instead of directly on the primary key.
+Manager, position and department have a strong relationship with each other. It is common for people with the same job position to work in the same department and have the same manager.
 
-#### Examples of Transitive Dependencies  
-1. **Manager ⇄ Department ⇄ Position**  
-   - Managers belong to departments, and departments define positions.  
-2. **Position → Salary**  
-   - People in the same position generally share the same salary.  
-3. **City + State → Zip Code**  
-   - A zip code is uniquely identified by its city and state.  
-4. **Department → Manager ID**  
-   - Each department has a designated Manager ID.
+Position and salary and also connected because often, people who have the same position at work have the same salary as well. 
 
----
+State, City, and Street address are all related to each other. It takes all three of these variables to complete a valid address of an employee.
 
-## 2. Identify the Primary Key
+Fields with Transitive Dependencies
 
-- **Primary Key:** `Employee ID`  
+Transitive dependencies are not directly dependent on the primary key but are related through other fields. Some fields are directly dependent on the primary key, however some fields are related to each other and not the primary key.
 
-This column uniquely identifies each employee record.
+An example of a transitive dependency is Manager and department. Managers usually belong to a department and departments are usually linked to positions. Positions rely on employee ID. The Manager field also has a transitive relation with the primary key since it is not directly dependent on the primary key but related through other fields.
 
----
+Position and department are another example of this. Every position is part of a department, so department has a transitive relationship with employee ID through position.
 
-## 3. Explain Why the Table Is Not in 3NF
+Zip code is dependent on City and State but does not directly depend on Employee ID. Since is relies more on a specific location is has a closer relationship to city and state creating a transitive dependency. An example of this would be employees who work in Pittsburgh, PA and share the zip code 15216.
 
-To be in **Third Normal Form (3NF)**, a table must first satisfy 1NF and 2NF **and** have **no transitive dependencies** among non-key attributes.
+Department and Manager ID is another example of a transitive dependency. Manager ID is dependent on Department field and since each department may have a designated manager, the manager is linked to the employee ID via the department field.
+2. Identify a Primary Key
 
-### Third Normal Form (3NF)  
-- All columns are atomic (single-valued).  
-- Every non-key attribute depends **only** on the primary key (no transitive dependencies).
+The primary key of the table provided is the Employee ID field.
 
-### Second Normal Form (2NF)  
-- Table is in 1NF.  
-- Every non-key attribute is fully functionally dependent on the entire primary key (no partial dependencies).
+3. Explain why table is not in 3NF
 
-### First Normal Form (1NF)  
-- No repeating groups or arrays.  
-- All columns hold atomic values.  
-- Each row is uniquely identified by a primary key.
+To understand why the given table is not currently in 3NF form we must break down the rules the create normal form. The goal of normalization is to remove redundancies and upgrade data integrity. We do this by organizing attributes into tables. A database table cannot be in 3NF if it is not in 2NF as well as 1NF and all of its attributes rely on the primary key. 3NF is going to make a database schema effiecient and reduce the risk of inconsistencies as well as anomalies. Let’s break down all the form types to explain in more detail why the table in the assignment is not in 3NF.
 
-#### Why It Fails 3NF  
-Because attributes like **Manager**, **Department**, **Position**, **Salary**, **City/State/Zip** depend on each other (not just on **Employee ID**), the table exhibits transitive dependencies and therefore is **not** in 3NF.
+Third normal form (3NF)
 
----
+A table must first be in 2NF before achieving 3NF which means the table should have atomic values. Each column shall contain only one value. Transitive dependencies are removed and non-primary fields are dependent upon the primary field.
 
-## 4. Explain the Current Normalization Status
+Second normal form (2NF)
 
-### 1NF  
-- No repeating groups; each column is atomic.  
-- A unique primary key (`Employee ID`) identifies every row.
+A table must first be in 1NF before 2NF and all non-key attributes must function dependent upon the primary key. There also should be no partial dependencies of any of the columns on the primary key.
 
-### 2NF  
-- Already in 1NF.  
-- All non-key attributes fully depend on `Employee ID` (no partial dependencies).
+First normal form (1NF)
 
-> **Note:** The presence of transitive dependencies prevents 3NF compliance.
+The first stage of database normalization is 1NF. 1NF ensures that there are no recurring groups inside rows. All of a table’s columns contain atomic values. All tables in 1NF have a primary key, columns must contain single values, and values of an attribute must be of the same data type. No rows can be identical, and fields must have unique names. No redundant data as well as data being repeated across fields.
 
----
+Due to the presence of transitive dependencies, the table given is not in 3NF. A transitive dependency occurs when non-key attributes relies on another non-key attribute through a third attribute.
+
+Examples of some of the transitive dependencies in the given table.
+
+Example one of transitive dependencies
+ Department -> Manager ID and position
+Each department have a specific manager and job positions for example the Information Technology department has Programmer 1 and programmer II with a Manager ID of 1050. Knowing the department can dictate the Manager ID and position which tells us that Manager ID and position are transitively dependant upon Department and not just on Employee ID.
+
+Another example of this is the sales department has sales representative positions which are run by Manager ID 1021
+
+Example two of transitive dependencies
+Street Address, City, State, and ZIP code become a complete address when put together with each depending upon the other. State is reliant on City and the zip code is unique to that city and state combination. For example, the zip code 32829 is tied to the city “Sometown” Florida.  The zip code 32829 is tied to “Anytown” Florida. The State field relies on the City so according to the table would be “Sometown or Anytown” making the zip code specific to that. The address is tied to Employee ID, however the zip code is transitively dependent on the grouping of Street address, city, and state and not directly to the primary key (employee ID)
+
+4. Explain the Current Normalization Status
+
+The current normalization status of the table is 1NF as well as 2NF.
+
+1NF
+
+The table can be confirmed as in 1NF for several reasons. For one, there is no repeating groups, meaning each cell in a table only contains one piece of data. Each row of the table is indentified by the Employee ID (primary key) which is unique and no rows are the same. Columns in the table have atomic values which are the smallest units of data that can be stored in a database. These factors determine that the table is in fact in 1NF form.
+
+2NF
+
+The first requirement on 2NF is that the table must first be in 1NF form, which we have confirmed in the statement above. Complete functional dependency is another requirement that is fulfilled in the table given meaning all non-key attributes are completely dependent on the primary key.
+
+The table is not in 3NF form because it has transitive dependencies.
